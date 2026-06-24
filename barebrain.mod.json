@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "id": "tool-tts",
+  "name": "文本转语音 TTS",
+  "version": "0.1.0",
+  "type": "tool",
+  "description": "将 BareBrain 的文本回复转换为语音并通过配置的音频设备播放。",
+  "targets": ["esp32s3"],
+  "sources": [
+    "src/mod_tool_tts.c",
+    "src/tool_tts.c"
+  ],
+  "headers": [
+    "src/tool_tts.h"
+  ],
+  "dependencies": [
+    "core.tool_registry"
+  ],
+  "conflicts": [],
+  "permissions": [
+    "gpio.write"
+  ],
+  "tools": [
+    "tts_speak"
+  ],
+  "services": [],
+  "resources": {
+    "tasks": 0,
+    "gpio": ["configurable"],
+    "i2c": ["configurable"],
+    "psram_bytes_hint": 16384,
+    "flash_bytes_hint": 49152
+  },
+  "config_schema": {
+    "tts.i2c_sda": {
+      "type": "gpio",
+      "label": "I2C SDA",
+      "required": true
+    },
+    "tts.i2c_scl": {
+      "type": "gpio",
+      "label": "I2C SCL",
+      "required": true
+    }
+  },
+  "hardware": {
+    "module": "Hiwonder I2C voice module",
+    "interface": "i2c",
+    "power": [
+      {"module_pin": "5V", "board_pin": "5V"},
+      {"module_pin": "GND", "board_pin": "GND"}
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+idf_component_register(
+    SRCS
+        "src/mod_tool_tts.c"
+        "src/tool_tts.c"
+    INCLUDE_DIRS
+        "src"
+    REQUIRES
+        json
+)
