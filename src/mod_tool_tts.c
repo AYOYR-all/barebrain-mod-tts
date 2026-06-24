@@ -9,11 +9,14 @@ static const char *const tool_tts_deps[] = {
 
 static const brn_tool_t tts_speak_tool = {
     .name = "tts_speak",
-    .description = "Convert text to speech and play it through the configured audio output.",
+    .description = "Play a preconfigured WonderEcho phrase by ID.",
     .input_schema_json =
         "{\"type\":\"object\","
-        "\"properties\":{\"text\":{\"type\":\"string\",\"description\":\"Text to speak\"}},"
-        "\"required\":[\"text\"]}",
+        "\"properties\":{"
+        "\"phrase_id\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":255},"
+        "\"type\":{\"type\":\"string\",\"enum\":[\"general\",\"command\"]}"
+        "},"
+        "\"required\":[\"phrase_id\"]}",
     .execute = tool_tts_execute,
 };
 
@@ -29,7 +32,7 @@ static esp_err_t tool_tts_mod_init(void)
 const brn_mod_t brn_mod_tool_tts = {
     .id = "tool-tts",
     .name = "Text To Speech Tool",
-    .version = "0.1.0",
+    .version = "0.1.1",
     .deps = tool_tts_deps,
     .init = tool_tts_mod_init,
 };

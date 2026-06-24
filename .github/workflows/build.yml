@@ -1,0 +1,53 @@
+name: Build Plugin
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  idf-build:
+    runs-on: ubuntu-latest
+    container:
+      image: espressif/idf:v5.5.2
+    steps:
+      - name: Checkout plugin
+        uses: actions/checkout@v4
+        with:
+          path: plugin
+      - name: Checkout BareBrain
+        uses: actions/checkout@v4
+        with:
+          repository: AYOYR-all/BareBrain
+          ref: master
+          path: barebrain
+      - name: Build WonderEcho plugin
+        shell: bash
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE/barebrain"
+          mkdir -p barebrain/main/external_mods/tool-tts
+          cp -R plugin/barebrain.mod.json plugin/CMakeLists.txt plugin/src \
+            barebrain/main/external_mods/tool-tts/
+          cat > barebrain/tts-profile.json <<'JSON'
+          {
+            "enabled_mods": [
+              "tool-cron",
+              "tool-files",
+              "tool-get-time",
+              "tool-gpio",
+              "tool-memory",
+              "tool-web-search",
+              "tool-tts"
+            ],
+            "config": {
+              "tts.i2c_sda": 5,
+              "tts.i2c_scl": 6
+            }
+          }
+          JSON
+          cd barebrain
+          . "$IDF_PATH/export.sh"
+          idf.py set-target esp32s3
+          idf.py -DBRN_BUILD_PROFILE="$PWD/tts-profile.json" reconfigure
+          idf.py build

@@ -6,4 +6,5 @@ idf_component_register(
         "src"
     REQUIRES
         json
+        esp_driver_i2c
 )

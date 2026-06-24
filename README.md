@@ -1,5 +1,9 @@
 # BareBrain Text To Speech Tool
 
+Version 0.1.1 targets the Hiwonder WonderEcho CI1302 module. Despite the
+historic `tool-tts` name, this hardware does not synthesize arbitrary text.
+It broadcasts phrases preconfigured in the module firmware by phrase ID.
+
 BareBrain 的外部文本转语音插件骨架。插件注册 `tts_speak` 工具，将文本交给后续配置的 TTS 服务和音频输出设备。
 
 ## 当前状态
