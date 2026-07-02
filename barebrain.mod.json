@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "id": "tool-tts",
-  "name": "文本转语音 TTS",
-  "version": "0.1.1",
+  "name": "WonderEcho 语音播报",
+  "version": "0.1.3",
   "type": "tool",
-  "description": "将 BareBrain 的文本回复转换为语音并通过配置的音频设备播放。",
+  "description": "通过 I2C 控制 Hiwonder WonderEcho CI1302 模块播放中文固件中的预置语音，并读取语音识别结果。",
   "targets": ["esp32s3"],
   "barebrain_min": "0.1.0",
   "barebrain_max": "0.x",
@@ -19,10 +19,12 @@
     "core.tool_registry"
   ],
   "conflicts": [],
-  "permissions": ["gpio.write", "i2c.write"],
+  "permissions": ["gpio.write", "i2c.read", "i2c.write"],
   "idf_components": ["esp_driver_i2c"],
   "tools": [
-    "tts_speak"
+    "tts_status",
+    "tts_speak",
+    "tts_read_recognition"
   ],
   "services": [],
   "resources": {
@@ -48,6 +50,7 @@
     "module": "Hiwonder WonderEcho CI1302 voice interaction module",
     "interface": "i2c",
     "i2c_address": "0x34",
+    "recognition_register": "0x64",
     "broadcast_register": "0x6E",
     "power": [
       {"module_pin": "5V", "board_pin": "5V"},

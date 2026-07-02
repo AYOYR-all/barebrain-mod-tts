@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.3
+
+- Notify the optional OLED face feedback hook when `tts_speak` starts playback.
+
+## 0.1.2
+
+- Keep `tool-tts` registered even when WonderEcho is not connected at boot.
+- Add `tts_status` for runtime I2C probing at address `0x34`.
+- Add `tts_read_recognition` for reading register `0x64`.
+- Keep `tts_speak` on register `0x6E` and accept announcement/general aliases.
+
 ## 0.1.1
 
 - Add a real WonderEcho I2C driver at address `0x34`.

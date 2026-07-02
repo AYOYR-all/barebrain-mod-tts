@@ -1,44 +1,111 @@
-# BareBrain Text To Speech Tool
+# BareBrain WonderEcho Voice Tool
 
-Version 0.1.1 targets the Hiwonder WonderEcho CI1302 module. Despite the
-historic `tool-tts` name, this hardware does not synthesize arbitrary text.
-It broadcasts phrases preconfigured in the module firmware by phrase ID.
+`tool-tts` targets the Hiwonder WonderEcho CI1302 integrated AI voice
+interaction module. The historic name is TTS, but this module does not
+synthesize arbitrary text from the ESP32. It plays phrases that already exist
+in the WonderEcho firmware, and it can expose the module's speech recognition
+result byte to BareBrain.
 
-BareBrain 的外部文本转语音插件骨架。插件注册 `tts_speak` 工具，将文本交给后续配置的 TTS 服务和音频输出设备。
+## Hardware
 
-## 当前状态
-
-- 已完成 BareBrain Mod manifest。
-- 已完成工具注册和输入校验。
-- 尚未确定 TTS 提供方、音频功放和 GPIO。
-- 在硬件配置完成前，工具会返回明确的未配置错误。
-
-## 硬件接口
-
-照片中的 Hiwonder 语音模块接口为：
+Module pins:
 
 ```text
 5V GND SDA SCL
 ```
 
-- `5V` 接 ESP32-S3 开发板的 `5V`
-- `GND` 接 `GND`
-- `SDA`、`SCL` 在 Manager 引脚配置页自行选择
+- `5V` -> ESP32-S3 `5V`
+- `GND` -> ESP32-S3 `GND`
+- `SDA` / `SCL` -> configure in BareBrain Manager as `tts.i2c_sda` and
+  `tts.i2c_scl`
 
-该模块使用 I2C 控制，不使用之前示例中的 I2S 三线接口。插件不提供默认 GPIO。
+The factory I2C address is `0x34`.
 
-## 接入 BareBrain
+## WonderEcho Registers
 
-云端构建下载 Release 后，将插件解压到：
+From the vendor examples under:
+
+```text
+D:\BaiduNetdiskDownload\一体式AI语音交互模块（WonderEcho)
+```
+
+- recognition result register: `0x64`
+- broadcast register: `0x6E`
+- command phrase type: `0x00`
+- announcement phrase type: `0xFF`
+
+The vendor serial protocol list uses frames such as `AA 55 00 01 FB` and
+`AA 55 FF 01 FB`. Over I2C, BareBrain writes only the middle two bytes
+(`type`, `phrase_id`) to register `0x6E`.
+
+## Chinese Firmware
+
+The Chinese factory firmware is in the vendor package:
+
+```text
+D:\BaiduNetdiskDownload\一体式AI语音交互模块（WonderEcho)\2.软件工具&固件\2.出厂固件\2.1 CI1302_中文_单麦_V00729_UART1_115200_2M.bin
+```
+
+The flashing tool is in:
+
+```text
+D:\BaiduNetdiskDownload\一体式AI语音交互模块（WonderEcho)\2.软件工具&固件\1.烧录工具\ci-tool-kit.exe
+```
+
+Flash the Chinese firmware to the WonderEcho module with the vendor tool before
+expecting the phrase IDs in the Chinese protocol spreadsheet to match.
+
+## Tools
+
+### `tts_status`
+
+Probe the WonderEcho module at I2C address `0x34`.
+
+```json
+{}
+```
+
+### `tts_speak`
+
+Play a preconfigured phrase from the WonderEcho firmware.
+
+```json
+{"type":"announcement","phrase_id":1}
+```
+
+`type` accepts:
+
+- `command`: writes `0x00, phrase_id`
+- `general`, `announcement`, or `announcer`: writes `0xFF, phrase_id`
+
+### `tts_read_recognition`
+
+Read one byte from recognition result register `0x64`.
+
+```json
+{}
+```
+
+The value corresponds to the command IDs in the firmware's protocol
+spreadsheet.
+
+## BareBrain Integration
+
+Install or copy this plugin to:
 
 ```text
 BareBrain/main/external_mods/tool-tts/
 ```
 
-固件 Profile 中启用：
+Enable it in the firmware profile:
 
 ```json
 {
   "enabled_mods": ["tool-tts"]
 }
 ```
+
+The plugin registers its tools even if the module is not connected at boot.
+Use `tts_status` after wiring or power cycling the module; once it reports
+connected, `tts_speak` and `tts_read_recognition` can be called directly
+through the BareBrain tool chain.
