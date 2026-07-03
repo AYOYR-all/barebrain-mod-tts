@@ -32,6 +32,7 @@
 #define WONDERECHO_VOICE_RETRY_MS 2000
 #define WONDERECHO_VOICE_STACK 4096
 #define WONDERECHO_VOICE_PRIO 4
+#define WONDERECHO_AGENT_CHAT_ID "barebrain_app"
 
 static const char *TAG = "tool_tts";
 static i2c_master_bus_handle_t s_bus;
@@ -144,7 +145,7 @@ static esp_err_t push_voice_command_to_agent(const voice_command_t *command)
 
     brn_msg_t msg = {0};
     strncpy(msg.channel, BRN_CHAN_WEBSOCKET, sizeof(msg.channel) - 1);
-    strncpy(msg.chat_id, "voice", sizeof(msg.chat_id) - 1);
+    strncpy(msg.chat_id, WONDERECHO_AGENT_CHAT_ID, sizeof(msg.chat_id) - 1);
     msg.content = content;
 
     esp_err_t err = message_bus_push_inbound(&msg);

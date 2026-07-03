@@ -2,7 +2,7 @@
   "schema": 1,
   "id": "tool-tts",
   "name": "WonderEcho Voice",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "type": "tool",
   "description": "Control a Hiwonder WonderEcho CI1302 module over I2C, play preconfigured phrases, read recognition IDs, and inject selected voice commands into the BareBrain agent.",
   "targets": ["esp32s3"],

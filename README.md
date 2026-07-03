@@ -96,6 +96,10 @@ BareBrain mod manager starts. It polls register `0x64` and injects selected
 recognition IDs into the normal BareBrain agent message bus. The WonderEcho
 module can still play its configured local reply phrase at the same time.
 
+Starting with `0.1.5`, these injected messages use the BareBrainAPP default
+chat id `barebrain_app`, so replies appear in the default app conversation when
+that client is connected.
+
 Mapped IDs:
 
 | Spoken command | Protocol frame | Recognition ID | Agent action |

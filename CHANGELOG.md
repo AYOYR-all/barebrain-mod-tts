@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5
+
+- Route WonderEcho voice-command agent messages to the BareBrainAPP default chat id `barebrain_app`.
+
 ## 0.1.4
 
 - Add a WonderEcho voice command listener that maps recognition IDs 0x01, 0x02, 0x08, and 0x09 into BareBrain agent messages.
