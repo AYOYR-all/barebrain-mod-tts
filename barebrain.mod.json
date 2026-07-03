@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "id": "tool-tts",
-  "name": "WonderEcho 语音播报",
-  "version": "0.1.3",
+  "name": "WonderEcho Voice",
+  "version": "0.1.4",
   "type": "tool",
-  "description": "通过 I2C 控制 Hiwonder WonderEcho CI1302 模块播放中文固件中的预置语音，并读取语音识别结果。",
+  "description": "Control a Hiwonder WonderEcho CI1302 module over I2C, play preconfigured phrases, read recognition IDs, and inject selected voice commands into the BareBrain agent.",
   "targets": ["esp32s3"],
   "barebrain_min": "0.1.0",
   "barebrain_max": "0.x",
@@ -16,7 +16,8 @@
     "src/tool_tts.h"
   ],
   "dependencies": [
-    "core.tool_registry"
+    "core.tool_registry",
+    "core.message_bus"
   ],
   "conflicts": [],
   "permissions": ["gpio.write", "i2c.read", "i2c.write"],
@@ -26,13 +27,13 @@
     "tts_speak",
     "tts_read_recognition"
   ],
-  "services": [],
+  "services": ["voice_command_listener"],
   "resources": {
-    "tasks": 0,
+    "tasks": 1,
     "gpio": ["configurable"],
     "i2c": ["configurable"],
     "psram_bytes_hint": 16384,
-    "flash_bytes_hint": 49152
+    "flash_bytes_hint": 57344
   },
   "config_schema": {
     "tts.i2c_sda": {
@@ -52,6 +53,12 @@
     "i2c_address": "0x34",
     "recognition_register": "0x64",
     "broadcast_register": "0x6E",
+    "voice_command_map": {
+      "0x01": "query_weather",
+      "0x02": "play_music",
+      "0x08": "create_timer",
+      "0x09": "query_memory"
+    },
     "power": [
       {"module_pin": "5V", "board_pin": "5V"},
       {"module_pin": "GND", "board_pin": "GND"}

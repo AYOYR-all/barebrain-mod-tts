@@ -89,6 +89,25 @@ Read one byte from recognition result register `0x64`.
 The value corresponds to the command IDs in the firmware's protocol
 spreadsheet.
 
+## Voice Command Agent Bridge
+
+Starting with `0.1.4`, the plugin starts a small background listener after the
+BareBrain mod manager starts. It polls register `0x64` and injects selected
+recognition IDs into the normal BareBrain agent message bus. The WonderEcho
+module can still play its configured local reply phrase at the same time.
+
+Mapped IDs:
+
+| Spoken command | Protocol frame | Recognition ID | Agent action |
+| --- | --- | --- | --- |
+| 查询天气 | `AA 55 00 01 FB` | `0x01` | Ask the agent to query today's weather. |
+| 播放音乐 | `AA 55 00 02 FB` | `0x02` | Ask the agent to respond about music playback. |
+| 开启定时任务 | `AA 55 00 08 FB` | `0x08` | Ask the agent to create or clarify a cron task. |
+| 查询记忆 | `AA 55 00 09 FB` | `0x09` | Ask the agent to search stored memory. |
+
+The bridge debounces repeated non-zero bytes and will only trigger the same
+command again after the module reports `0x00` in between.
+
 ## BareBrain Integration
 
 Install or copy this plugin to:

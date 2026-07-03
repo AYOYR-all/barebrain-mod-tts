@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.4
+
+- Add a WonderEcho voice command listener that maps recognition IDs 0x01, 0x02, 0x08, and 0x09 into BareBrain agent messages.
+- Route voice commands through the normal chat agent so weather, music, cron, and memory requests can use the existing tool chain.
+- Debounce repeated recognition bytes until the module reports 0 again.
+
 ## 0.1.3
 
 - Notify the optional OLED face feedback hook when `tts_speak` starts playback.

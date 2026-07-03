@@ -4,6 +4,7 @@
 
 static const char *const tool_tts_deps[] = {
     "core.tool_registry",
+    "core.message_bus",
     NULL,
 };
 
@@ -54,7 +55,8 @@ static esp_err_t tool_tts_mod_init(void)
 const brn_mod_t brn_mod_tool_tts = {
     .id = "tool-tts",
     .name = "Text To Speech Tool",
-    .version = "0.1.3",
+    .version = "0.1.4",
     .deps = tool_tts_deps,
     .init = tool_tts_mod_init,
+    .start = tool_tts_start,
 };
