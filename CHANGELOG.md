@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.7
+
+- Publish the completed WonderEcho mappings for Xi'an weather, new movies, and book recommendations.
+- Keep the manifest and runtime module version aligned.
+
 ## 0.1.6
 
 - Add WonderEcho voice command mappings for Xi'an weather, new movie recommendations, and book recommendations.
