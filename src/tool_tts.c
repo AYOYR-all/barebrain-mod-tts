@@ -11,6 +11,7 @@
 #include "esp_check.h"
 #include "esp_log.h"
 #include "feedback/face_state.h"
+#include "gateway/ws_server.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "generated/brn_profile_config.h"
@@ -66,6 +67,21 @@ static const voice_command_t s_voice_commands[] = {
         .id = 0x09,
         .label = "query_memory",
         .prompt = "语音指令：查询记忆。请查询与当前用户和设备相关的长期记忆，并简短总结；必要时调用 memory_search 或 memory_read_node。",
+    },
+    {
+        .id = 0x0B,
+        .label = "query_xian_weather",
+        .prompt = "语音指令：查询西安天气。请查询西安今天的天气，并用简短自然的聊天方式回复。",
+    },
+    {
+        .id = 0x0C,
+        .label = "recommend_new_movies",
+        .prompt = "语音指令：最近有什么新电影。请整理近期值得关注的新电影，按类型或看点简短推荐，方便用户直接挑选。",
+    },
+    {
+        .id = 0x0D,
+        .label = "recommend_book",
+        .prompt = "语音指令：给我推荐一本书。请根据通用阅读兴趣推荐一本值得读的书，说明书名、作者、推荐理由和适合的人群。",
     },
 };
 
@@ -145,7 +161,9 @@ static esp_err_t push_voice_command_to_agent(const voice_command_t *command)
 
     brn_msg_t msg = {0};
     strncpy(msg.channel, BRN_CHAN_WEBSOCKET, sizeof(msg.channel) - 1);
-    strncpy(msg.chat_id, WONDERECHO_AGENT_CHAT_ID, sizeof(msg.chat_id) - 1);
+    strncpy(msg.chat_id,
+            ws_server_latest_chat_id(WONDERECHO_AGENT_CHAT_ID),
+            sizeof(msg.chat_id) - 1);
     msg.content = content;
 
     esp_err_t err = message_bus_push_inbound(&msg);
@@ -154,8 +172,8 @@ static esp_err_t push_voice_command_to_agent(const voice_command_t *command)
         return err;
     }
 
-    ESP_LOGI(TAG, "Voice command 0x%02X (%s) injected into agent",
-             command->id, command->label);
+    ESP_LOGW(TAG, "Voice command 0x%02X (%s) injected into agent chat_id=%s",
+             command->id, command->label, msg.chat_id);
     return ESP_OK;
 }
 

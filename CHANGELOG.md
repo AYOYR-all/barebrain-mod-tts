@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.6
+
+- Add WonderEcho voice command mappings for Xi'an weather, new movie recommendations, and book recommendations.
+- Publish the new recognition IDs in the plugin manifest voice command map.
+
 ## 0.1.5
 
 - Route WonderEcho voice-command agent messages to the BareBrainAPP default chat id `barebrain_app`.

@@ -100,6 +100,10 @@ Starting with `0.1.5`, these injected messages use the BareBrainAPP default
 chat id `barebrain_app`, so replies appear in the default app conversation when
 that client is connected.
 
+Starting with `0.1.6`, the bridge also handles the additional WonderEcho
+commands for Xi'an weather, recent movie recommendations, and book
+recommendations.
+
 Mapped IDs:
 
 | Spoken command | Protocol frame | Recognition ID | Agent action |
@@ -108,6 +112,10 @@ Mapped IDs:
 | 播放音乐 | `AA 55 00 02 FB` | `0x02` | Ask the agent to respond about music playback. |
 | 开启定时任务 | `AA 55 00 08 FB` | `0x08` | Ask the agent to create or clarify a cron task. |
 | 查询记忆 | `AA 55 00 09 FB` | `0x09` | Ask the agent to search stored memory. |
+
+| 查询西安天气 | `AA 55 00 0B FB` | `0x0B` | Ask the agent to query today's weather in Xi'an. |
+| 最近有什么新电影 | `AA 55 00 0C FB` | `0x0C` | Ask the agent to recommend recent movies. |
+| 给我推荐一本书 | `AA 55 00 0D FB` | `0x0D` | Ask the agent to recommend a book. |
 
 The bridge debounces repeated non-zero bytes and will only trigger the same
 command again after the module reports `0x00` in between.
